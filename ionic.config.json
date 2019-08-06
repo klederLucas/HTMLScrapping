@@ -1,6 +1,8 @@
 {
   "name": "HTMLScrapping",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular",
   "id": "8ab63e42"
 }
