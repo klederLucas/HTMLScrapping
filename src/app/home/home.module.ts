@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
+import { PrinterListPage } from '../modals/printer-list/printer-list.page';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -14,6 +15,7 @@ import { SharedModule } from '../shared/shared.module';
       }
     ])
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, PrinterListPage],
+  entryComponents: [PrinterListPage]
 })
 export class HomePageModule {}

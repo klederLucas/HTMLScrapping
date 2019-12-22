@@ -1,10 +1,8 @@
-import { Platform } from '@ionic/angular';
-import { File } from '@ionic-native/file/ngx';
+import { Platform, AlertController } from '@ionic/angular';
 import { Component } from '@angular/core';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { DocumentViewerOptions, DocumentViewer } from '@ionic-native/document-viewer/ngx';
-
-
+import { PrintService } from '../service/print/print.service';
+import { ModalController } from '@ionic/angular';
+import { PrinterListPage } from '../modals/printer-list/printer-list.page';
 
 @Component({
   selector: 'app-home',
@@ -14,30 +12,66 @@ import { DocumentViewerOptions, DocumentViewer } from '@ionic-native/document-vi
 
 export class HomePage {
 
+  selectedPrinter: any = [];
+
   constructor(private platform: Platform,
-              private file: File,
-              private fileOpener: FileOpener,
-              private document: DocumentViewer) {
-  
+              private print: PrintService,
+              private modalCtrl: ModalController,
+              private alertCtrl: AlertController) {
+
   }
 
-  abrirHTMLLocal(){
-    let filePath = this.file.applicationDirectory + 'www/assets';
+  async presentAlert(messageData: any) {
+    const alert = await this.alertCtrl.create(messageData);
+    await alert.present();
+  }
 
-    if (this.platform.is('android')){
-      let fakeName = Date.now();
-      this.file.copyFile(filePath, '5-tools.html', this.file.dataDirectory, '${fakeName}.html').then(result => {
-        this.fileOpener.open(result.nativeURL, 'application/html')
-        .then(() => console.log('File is opened'))
-        .catch(e => console.log('Error opening file', e));
-      })
+
+  async openModal() {
+    const modal = await this.modalCtrl.create({
+      component: PrinterListPage
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.selectedPrinter = data.data;
+    });
+
+    return await modal.present();
+  }
+
+  testConnectPrinter() {
+    const id = this.selectedPrinter.id;
+
+    // tslint:disable-next-line: triple-equals
+    if ((id == null) || (id == '') || (id == undefined)) {
+
     } else {
-      const options: DocumentViewerOptions ={
-        title: 'My HTML'
-      }
-      this.document.viewDocument('${filePath}/5-tools.html', 'application/html', options)
-    }
-  }  
-  
+      this.print.connectBT(id).subscribe(data => {
+        console.log('Conexão realizada', data);
 
+        this.presentAlert({
+          header: 'Sucesso!',
+          message: 'Conectado a impressora!',
+          buttons: ['OK']
+        });
+      }, err => {
+        console.log('Erro de conexão com a impressora!', err);
+        this.presentAlert({
+          header: 'Erro!',
+          message: 'Erro de conexão com a impressora! \n' + err,
+          buttons: ['OK']
+        });
+      });
+    }
+  }
+
+  testPrinter() {
+    const id = this.selectedPrinter.id;
+    // tslint:disable-next-line: triple-equals
+    if ((id == null) || (id == '') || (id == undefined)) {
+
+    } else {
+      this.print.testarImpressao(id);
+    }
+  }
 }

@@ -7,20 +7,21 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
-
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 
 
 @NgModule({
   declarations: [],
   imports: [IonicModule.forRoot()],
-  exports: [BrowserModule,IonicModule],
+  exports: [BrowserModule, IonicModule],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     File,
     FileOpener,
-    DocumentViewer
+    DocumentViewer,
+    BluetoothSerial
   ]
 })
 export class CoreModule { }
