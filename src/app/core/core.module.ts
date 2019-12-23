@@ -4,10 +4,11 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
+import { Chooser } from '@ionic-native/chooser/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
     File,
     FileOpener,
     DocumentViewer,
-    BluetoothSerial
+    BluetoothSerial,
+    Chooser
   ]
 })
 export class CoreModule { }

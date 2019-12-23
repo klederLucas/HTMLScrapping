@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 import { PrintService } from '../service/print/print.service';
 import { ModalController } from '@ionic/angular';
 import { PrinterListPage } from '../modals/printer-list/printer-list.page';
+import { Chooser } from '@ionic-native/chooser/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +20,9 @@ export class HomePage {
   constructor(private platform: Platform,
               private print: PrintService,
               private modalCtrl: ModalController,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              private chooser: Chooser,
+              private file: File) {
 
   }
 
@@ -39,32 +44,6 @@ export class HomePage {
     return await modal.present();
   }
 
-  testConnectPrinter() {
-    const id = this.selectedPrinter.id;
-
-    // tslint:disable-next-line: triple-equals
-    if ((id == null) || (id == '') || (id == undefined)) {
-
-    } else {
-      this.print.connectBT(id).subscribe(data => {
-        console.log('Conexão realizada', data);
-
-        this.presentAlert({
-          header: 'Sucesso!',
-          message: 'Conectado a impressora!',
-          buttons: ['OK']
-        });
-      }, err => {
-        console.log('Erro de conexão com a impressora!', err);
-        this.presentAlert({
-          header: 'Erro!',
-          message: 'Erro de conexão com a impressora! \n' + err,
-          buttons: ['OK']
-        });
-      });
-    }
-  }
-
   testPrinter() {
     const id = this.selectedPrinter.id;
     // tslint:disable-next-line: triple-equals
@@ -74,4 +53,15 @@ export class HomePage {
       this.print.testarImpressao(id);
     }
   }
+
+  selectFile() {
+    (async () => {
+      const fileChoosed = await this.chooser.getFile();
+      this.file.checkDir(this.file.dataDirectory, fileChoosed.uri)
+        .then(_ => console.log('diretorio existente'))
+        .catch(error => console.log('Erro diretorio' + error));
+     })();
+  }
 }
+
+
